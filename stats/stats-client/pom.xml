@@ -10,7 +10,6 @@
     </parent>
 
     <name>Stats Client</name>
-
     <artifactId>stats-client</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
@@ -21,11 +20,5 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
-    <properties>
-        <maven.compiler.source>23</maven.compiler.source>
-        <maven.compiler.target>23</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
 </project>
