@@ -29,3 +29,7 @@ eureka:
 
 server:
   port: 0
+
+ewm:
+  stats-server:
+    url: http://stats-server
