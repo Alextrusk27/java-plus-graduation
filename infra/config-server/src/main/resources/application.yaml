@@ -14,6 +14,7 @@ spring:
         native:
           searchLocations:
             - classpath:config/infra/{application}
+            - classpath:config/core/{application}
 
 server:
   port: ${CONFIG_SERVER_PORT:8888}
