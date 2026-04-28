@@ -5,6 +5,10 @@ spring:
     username: ${DB_USER:stats}
     password: ${DB_PASSWORD:stats}
 
+  sql:
+    init:
+      mode: always
+
   jpa:
     open-in-view: false
     properties:
