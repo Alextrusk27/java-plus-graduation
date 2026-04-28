@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/stats_db
+    username: ${DB_USER:stats}
+    password: ${DB_PASSWORD:stats}
+
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        ddl-auto: validate

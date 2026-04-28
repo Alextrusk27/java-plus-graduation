@@ -10,3 +10,7 @@ spring:
     properties:
       hibernate:
         ddl-auto: validate
+
+ewm:
+  stats-server:
+    url: http://stats-server

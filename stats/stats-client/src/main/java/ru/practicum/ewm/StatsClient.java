@@ -1,6 +1,5 @@
 package ru.practicum.ewm;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -15,12 +14,15 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
 public class StatsClient {
     private final RestTemplate restTemplate;
-
-    @Value("${ewm.stats-server.url}")
     private final String statsServerUrl;
+
+    public StatsClient(RestTemplate restTemplate,
+                       @Value("${ewm.stats-server.url}") String statsServerUrl) {
+        this.restTemplate = restTemplate;
+        this.statsServerUrl = statsServerUrl;
+    }
 
     @Retryable(
             retryFor = {RestClientException.class, IOException.class},

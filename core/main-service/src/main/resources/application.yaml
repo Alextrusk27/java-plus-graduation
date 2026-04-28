@@ -22,7 +22,7 @@ eureka:
 
   instance:
     prefer-ip-address: true
-    hostname: localhost
+    hostname: ${HOSTNAME:localhost}
     instance-id: ${spring.application.name}:${random.uuid}
     lease-renewal-interval-in-seconds: 7
     lease-expiration-duration-in-seconds: 30
@@ -30,6 +30,8 @@ eureka:
 server:
   port: 0
 
-ewm:
-  stats-server:
-    url: http://stats-server
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
