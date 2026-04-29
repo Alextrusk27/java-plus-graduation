@@ -1,42 +1,55 @@
-services:
-#  stats-server:
-#    ports:
-#      - "9090:9090"
+x-db-common: &db-common
+  image: postgres:16.1-alpine
+  restart: unless-stopped
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER"]
+    timeout: 5s
+    interval: 5s
+    retries: 10
+    start_period: 10s
 
-  stats-db:
-    image: postgres:16.1
-    container_name: stats-db
+services:
+  stats-server-db:
+    <<: *db-common
+    container_name: stats-server-db
     volumes:
-      - ./stats/stats-server/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - stats_db_data:/var/lib/postgresql/data/
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_DB=stats_db
       - POSTGRES_USER=stats
       - POSTGRES_PASSWORD=stats
-    healthcheck:
-      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
-      timeout: 5s
-      interval: 5s
-      retries: 10
 
-#  ewm-service:
-#    ports:
-#      - "8080:8080"
-
-  main-db:
-    image: postgres:16.1
-    container_name: main-db
+  main-service-db:
+    <<: *db-common
+    container_name: main-service-db
     volumes:
-      - ./core/main-service/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - main_db_data:/var/lib/postgresql/data/
     ports:
       - "5433:5432"
     environment:
       - POSTGRES_DB=main_db
       - POSTGRES_USER=main
       - POSTGRES_PASSWORD=main
-    healthcheck:
-      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
-      timeout: 5s
-      interval: 5s
-      retries: 10
+
+  user-service-db:
+    <<: *db-common
+    image: postgres:16.1-alpine
+    container_name: user-service-db
+    volumes:
+      - user_db_data:/var/lib/postgresql/data/
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_DB=user_service_db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=user
+
+volumes:
+  stats_db_data:
+    name: stats_db_data
+  main_db_data:
+    name: main_db_data
+  user_db_data:
+    name: user_db_data
