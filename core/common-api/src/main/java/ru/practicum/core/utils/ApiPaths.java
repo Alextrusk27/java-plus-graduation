@@ -1,10 +1,10 @@
-package ru.practicum.ewm.sharing.constants;
+package ru.practicum.core.utils;
 
 import lombok.experimental.UtilityClass;
 
 /**
- * API path constants for the entire application.
- * Grouped by functional areas.
+ * API path constants for all Core controllers.
+ * Grouped by functional areas: Public, Private, and Admin.
  */
 
 @UtilityClass

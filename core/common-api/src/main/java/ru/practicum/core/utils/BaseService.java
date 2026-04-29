@@ -1,7 +1,7 @@
-package ru.practicum.ewm.sharing;
+package ru.practicum.core.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.ewm.exception.NotFoundException;
+import ru.practicum.core.exception.NotFoundException;
 
 @Slf4j
 public abstract class BaseService {

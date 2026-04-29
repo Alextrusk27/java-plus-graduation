@@ -1,4 +1,4 @@
-package ru.practicum.ewm.sharing;
+package ru.practicum.core.utils;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package ru.practicum.ewm.exception;
+package ru.practicum.core.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

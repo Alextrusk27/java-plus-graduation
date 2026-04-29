@@ -1,4 +1,4 @@
-package ru.practicum.ewm.user.dto;
+package ru.practicum.core.dto.user;
 
 public record UserShortDto(
         Long id,
