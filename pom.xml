@@ -14,10 +14,8 @@
 
     <modules>
         <module>stats</module>
-        <module>stats/stats-client</module>
-        <module>stats/stats-dto</module>
-        <module>stats/stats-server</module>
-        <module>main-service</module>
+        <module>core</module>
+        <module>infra</module>
     </modules>
 
     <groupId>ru.practicum</groupId>
@@ -26,13 +24,23 @@
     <packaging>pom</packaging>
 
     <properties>
+        <!-- Core -->
         <java.version>21</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Spring Cloud -->
+        <spring-cloud-dependencies.version>2023.0.3</spring-cloud-dependencies.version>
+
+        <!-- Database -->
+        <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
         <querydsl.version>5.0.0</querydsl.version>
+
+        <!-- Code Generation -->
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <lombok.version>1.18.42</lombok.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-        <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Plugins -->
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     </properties>
 
@@ -43,16 +51,19 @@
                 <artifactId>stats-dto</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>ru.practicum</groupId>
                 <artifactId>stats-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>com.querydsl</groupId>
                 <artifactId>querydsl-bom</artifactId>
@@ -60,10 +71,19 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
             <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>${org.mapstruct.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

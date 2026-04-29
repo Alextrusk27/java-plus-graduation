@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>ru.practicum</groupId>
-        <artifactId>explore-with-me</artifactId>
+        <artifactId>core</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
@@ -17,54 +17,74 @@
             <groupId>ru.practicum</groupId>
             <artifactId>stats-dto</artifactId>
         </dependency>
+
         <dependency>
             <groupId>ru.practicum</groupId>
             <artifactId>stats-client</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
             <version>${querydsl.version}</version>
             <classifier>jakarta</classifier>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
     </dependencies>
 
@@ -85,6 +105,7 @@
                     <execution>
                         <goals>
                             <goal>repackage</goal>
+                            <goal>build-info</goal>
                         </goals>
                     </execution>
                 </executions>
