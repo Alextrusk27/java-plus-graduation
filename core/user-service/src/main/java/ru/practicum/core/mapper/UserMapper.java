@@ -1,14 +1,13 @@
-package ru.practicum.ewm.user.mapper;
-
+package ru.practicum.core.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import ru.practicum.ewm.user.dto.NewUserRequest;
-import ru.practicum.ewm.user.dto.UserDto;
-import ru.practicum.ewm.user.dto.UserInfoProjection;
-import ru.practicum.ewm.user.dto.UserShortDto;
-import ru.practicum.ewm.user.model.User;
+import ru.practicum.core.dto.user.NewUserRequest;
+import ru.practicum.core.dto.user.UserDto;
+import ru.practicum.core.dto.user.UserInfoProjection;
+import ru.practicum.core.dto.user.UserShortDto;
+import ru.practicum.core.model.User;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {

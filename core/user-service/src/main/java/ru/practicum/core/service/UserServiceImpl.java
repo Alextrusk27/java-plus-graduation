@@ -1,4 +1,4 @@
-package ru.practicum.ewm.user.service;
+package ru.practicum.core.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -6,15 +6,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.exception.ConflictException;
-import ru.practicum.ewm.sharing.BaseService;
-import ru.practicum.ewm.sharing.EntityName;
-import ru.practicum.ewm.user.dto.NewUserRequest;
-import ru.practicum.ewm.user.dto.UserDto;
-import ru.practicum.ewm.user.dto.UserSearchRequest;
-import ru.practicum.ewm.user.mapper.UserMapper;
-import ru.practicum.ewm.user.model.User;
-import ru.practicum.ewm.user.repository.UserRepository;
+import ru.practicum.core.dto.user.NewUserRequest;
+import ru.practicum.core.dto.user.UserDto;
+import ru.practicum.core.dto.user.UserSearchRequest;
+import ru.practicum.core.exception.ConflictException;
+import ru.practicum.core.utils.BaseService;
+import ru.practicum.core.mapper.UserMapper;
+import ru.practicum.core.model.User;
+import ru.practicum.core.repository.UserRepository;
+import ru.practicum.core.utils.EntityName;
 
 import java.util.List;
 

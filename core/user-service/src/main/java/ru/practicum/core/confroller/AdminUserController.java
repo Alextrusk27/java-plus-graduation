@@ -1,4 +1,4 @@
-package ru.practicum.ewm.user.confroller;
+package ru.practicum.core.confroller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -6,11 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.sharing.constants.ApiPaths;
-import ru.practicum.ewm.user.dto.NewUserRequest;
-import ru.practicum.ewm.user.dto.UserDto;
-import ru.practicum.ewm.user.dto.UserSearchRequest;
-import ru.practicum.ewm.user.service.UserService;
+import ru.practicum.core.dto.user.NewUserRequest;
+import ru.practicum.core.dto.user.UserDto;
+import ru.practicum.core.dto.user.UserSearchRequest;
+import ru.practicum.core.utils.ApiPaths;
+import ru.practicum.core.service.UserService;
 
 import java.util.List;
 
@@ -49,8 +49,8 @@ public class AdminUserController {
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long userId) {
-        log.info("ADMIN: Delete user with commentId {}", userId);
+        log.info("ADMIN: Delete user with userId {}", userId);
         service.deleteUser(userId);
-        log.info("ADMIN: User with commentId {} deleted", userId);
+        log.info("ADMIN: User with userId {} deleted", userId);
     }
 }
