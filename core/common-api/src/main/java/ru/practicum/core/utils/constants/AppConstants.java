@@ -1,9 +1,9 @@
-package ru.practicum.ewm.sharing.constants;
+package ru.practicum.core.utils.constants;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import ru.practicum.ewm.sharing.PageableFactory;
+import ru.practicum.core.utils.PageableFactory;
 
 import java.time.format.DateTimeFormatter;
 

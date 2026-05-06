@@ -3,7 +3,7 @@ package ru.practicum.core.utils;
 import lombok.experimental.UtilityClass;
 
 /**
- * API path constants for all Core controllers.
+ * API path constants for all Core services.
  * Grouped by functional areas: Public, Private, and Admin.
  */
 

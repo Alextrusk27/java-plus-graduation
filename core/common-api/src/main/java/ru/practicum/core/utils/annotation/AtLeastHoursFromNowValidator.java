@@ -1,4 +1,4 @@
-package ru.practicum.ewm.sharing.annotation;
+package ru.practicum.core.utils.annotation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

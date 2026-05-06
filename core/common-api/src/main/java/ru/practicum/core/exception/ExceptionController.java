@@ -1,4 +1,4 @@
-package ru.practicum.ewm.exception;
+package ru.practicum.core.exception;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

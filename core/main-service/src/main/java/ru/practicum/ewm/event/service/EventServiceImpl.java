@@ -47,8 +47,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ru.practicum.ewm.sharing.constants.AppConstants.*;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
