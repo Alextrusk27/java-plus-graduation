@@ -6,21 +6,24 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.core.dto.user.NewUserRequest;
-import ru.practicum.core.dto.user.UserDto;
-import ru.practicum.core.dto.user.UserSearchRequest;
+import ru.practicum.core.dto.user.request.NewUserRequest;
+import ru.practicum.core.dto.user.response.UserDto;
+import ru.practicum.core.dto.user.request.UserSearchRequest;
+import ru.practicum.core.dto.user.response.UserShortDto;
 import ru.practicum.core.exception.ConflictException;
+import ru.practicum.core.exception.NotFoundException;
 import ru.practicum.core.utils.BaseService;
 import ru.practicum.core.mapper.UserMapper;
 import ru.practicum.core.model.User;
 import ru.practicum.core.repository.UserRepository;
 import ru.practicum.core.utils.EntityName;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class UserServiceImpl extends BaseService implements UserService {
 
     private final UserRepository userRepository;
@@ -39,6 +42,20 @@ public class UserServiceImpl extends BaseService implements UserService {
 
         return page.stream()
                 .map(userMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public UserDto getUser(Long userId) {
+        return userRepository.findById(userId)
+                .map(userMapper::toDto)
+                .orElseThrow(() -> new NotFoundException("User with id %s not found".formatted(userId)));
+    }
+
+    @Override
+    public List<UserShortDto> getUserShort(Set<Long> userIds) {
+        return userRepository.findAllByIdIn(new ArrayList<>(userIds), Pageable.unpaged())
+                .map(userMapper::toShortDto)
                 .toList();
     }
 

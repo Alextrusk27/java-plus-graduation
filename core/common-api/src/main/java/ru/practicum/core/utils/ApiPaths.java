@@ -4,7 +4,7 @@ import lombok.experimental.UtilityClass;
 
 /**
  * API path constants for all Core services.
- * Grouped by functional areas: Public, Private, and Admin.
+ * Grouped by functional areas: Public, Private, Admin and Internal (cross-service).
  */
 
 @UtilityClass
@@ -32,5 +32,12 @@ public final class ApiPaths {
         public static final String EVENTS = "/users/{userId}/events";
         public static final String COMMENTS = "/users/{userId}/comments";
         public static final String REQUESTS = "/users/{userId}/requests";
+    }
+
+    @UtilityClass
+    public class Internal {
+        public static final String USERS = "/internal/users";
+        public static final String REQUESTS = "/internal/events/requests";
+        public static final String EVENTS = "/internal/events";
     }
 }

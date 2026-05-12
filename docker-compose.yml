@@ -21,21 +21,8 @@ services:
       - POSTGRES_USER=stats
       - POSTGRES_PASSWORD=stats
 
-  main-service-db:
-    <<: *db-common
-    container_name: main-service-db
-    volumes:
-      - main_db_data:/var/lib/postgresql/data/
-    ports:
-      - "5433:5432"
-    environment:
-      - POSTGRES_DB=main_db
-      - POSTGRES_USER=main
-      - POSTGRES_PASSWORD=main
-
   user-service-db:
     <<: *db-common
-    image: postgres:16.1-alpine
     container_name: user-service-db
     volumes:
       - user_db_data:/var/lib/postgresql/data/
@@ -46,10 +33,32 @@ services:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=user
 
+  event-service-db:
+    <<: *db-common
+    container_name: event-service-db
+    volumes:
+      - event_db_data:/var/lib/postgresql/data/
+    ports:
+      - "5435:5432"
+    environment:
+      - POSTGRES_DB=event_service_db
+      - POSTGRES_USER=event
+      - POSTGRES_PASSWORD=event
+
+  request-service-db:
+    <<: *db-common
+    container_name: request-service-db
+    volumes:
+      - request_db_data:/var/lib/postgresql/data/
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_DB=request_service_db
+      - POSTGRES_USER=request
+      - POSTGRES_PASSWORD=request
+
 volumes:
   stats_db_data:
-    name: stats_db_data
-  main_db_data:
-    name: main_db_data
   user_db_data:
-    name: user_db_data
+  event_db_data:
+  request_db_data:

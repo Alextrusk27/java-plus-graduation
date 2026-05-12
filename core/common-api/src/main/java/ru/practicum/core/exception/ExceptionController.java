@@ -56,7 +56,7 @@ public class ExceptionController {
                 .body(ApiError.of(HttpStatus.BAD_REQUEST, "Validation Failed", errors));
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ApiError> handleValidationException(final ValidationException e) {
         log.warn("Validation exception: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -80,15 +80,6 @@ public class ExceptionController {
                         Collections.singletonList(e.getMessage())));
     }
 
-//    @ExceptionHandler
-//    public ResponseEntity<ApiError> handleException(final Exception e) {
-//        log.warn("Exception: {}", e.getMessage());
-//        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-//        return ResponseEntity.status(status)
-//                .body(ApiError.of(status, e.getMessage(),
-//                        Collections.singletonList(e.getMessage())));
-//    }
-
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ApiError> handleMissingParams(MissingServletRequestParameterException ex) {
         log.warn("Missing request parameter: {}", ex.getParameterName());
@@ -98,7 +89,7 @@ public class ExceptionController {
                         Collections.singletonList(error)));
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(AccessException.class)
     public ResponseEntity<ApiError> handleAccessException(final AccessException e) {
         log.warn("Access exception: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN)

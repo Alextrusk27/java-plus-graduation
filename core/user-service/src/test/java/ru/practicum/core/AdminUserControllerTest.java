@@ -9,9 +9,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.core.confroller.AdminUserController;
-import ru.practicum.core.dto.user.NewUserRequest;
-import ru.practicum.core.dto.user.UserDto;
+import ru.practicum.core.controller.AdminUserController;
+import ru.practicum.core.dto.user.request.NewUserRequest;
+import ru.practicum.core.dto.user.response.UserDto;
 import ru.practicum.core.service.UserService;
 import ru.practicum.core.utils.ApiPaths;
 
