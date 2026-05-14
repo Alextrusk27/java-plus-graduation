@@ -1,4 +1,4 @@
-package ru.practicum.core.feign;
+package ru.practicum.core.feign.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
@@ -7,12 +7,13 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.core.dto.request.EventRequestStatusUpdateResult;
 import ru.practicum.core.dto.request.ParticipationRequestDto;
 import ru.practicum.core.dto.request.UpdateRequestStatusDto;
+import ru.practicum.core.feign.FeignConfig;
 import ru.practicum.core.utils.ApiPaths;
 
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(name = "request-service", path = ApiPaths.Internal.REQUESTS)
+@FeignClient(name = "request-service", path = ApiPaths.Internal.REQUESTS, configuration = FeignConfig.class)
 public interface RequestFeignClient {
 
     @GetMapping("/count/{eventId}")

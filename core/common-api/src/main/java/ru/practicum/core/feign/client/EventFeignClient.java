@@ -1,12 +1,13 @@
-package ru.practicum.core.feign;
+package ru.practicum.core.feign.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import ru.practicum.core.dto.event.response.EventDtoInternal;
+import ru.practicum.core.feign.FeignConfig;
 import ru.practicum.core.utils.ApiPaths;
 
-@FeignClient(name = "event-service", path = ApiPaths.Internal.EVENTS)
+@FeignClient(name = "event-service", path = ApiPaths.Internal.EVENTS, configuration = FeignConfig.class)
 public interface EventFeignClient {
 
     @GetMapping("/{eventId}")

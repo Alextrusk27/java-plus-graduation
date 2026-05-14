@@ -14,3 +14,43 @@ spring:
     properties:
       hibernate:
         ddl-auto: validate
+
+feign:
+  circuitbreaker:
+    enabled: true
+
+  client:
+    config:
+      event-service:
+        connectTimeout: 3000
+        readTimeout: 5000
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      event-service:
+        register-health-indicator: true
+        sliding-window-size: 5
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 30
+        wait-duration-in-open-state: 5s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+
+logging:
+  level:
+    feign: DEBUG
+    io.github.resilience4j: DEBUG
+    ru.practicum.core.feign.fallback: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: beans, health, info, metrics, circuitbreakers
+
+  endpoint:
+    beans:
+      enabled: true
+    health:
+      show-details: always

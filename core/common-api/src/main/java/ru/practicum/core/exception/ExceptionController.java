@@ -2,6 +2,8 @@ package ru.practicum.core.exception;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.ServiceUnavailableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -56,6 +58,14 @@ public class ExceptionController {
                 .body(ApiError.of(HttpStatus.BAD_REQUEST, "Validation Failed", errors));
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiError> handleBadRequestException(final BadRequestException e) {
+        log.warn("Bad request exception: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiError.of(HttpStatus.BAD_REQUEST, "Bad Request",
+                        Collections.singletonList(e.getMessage())));
+    }
+
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ApiError> handleValidationException(final ValidationException e) {
         log.warn("Validation exception: {}", e.getMessage());
@@ -96,5 +106,13 @@ public class ExceptionController {
                 .body(ApiError.of(HttpStatus.FORBIDDEN, "For the requested operation the conditions are not met.",
                         Collections.singletonList(e.getMessage())));
 
+    }
+
+    @ExceptionHandler(ServiceUnavailableException.class)
+    public ResponseEntity<ApiError> handleServiceUnavailableException(final ServiceUnavailableException e) {
+        log.warn("Service unavailable exception: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(ApiError.of(HttpStatus.SERVICE_UNAVAILABLE, "Service is temporarily unavailable.",
+                        Collections.singletonList(e.getMessage())));
     }
 }
