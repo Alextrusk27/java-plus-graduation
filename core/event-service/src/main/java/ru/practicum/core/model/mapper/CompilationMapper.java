@@ -2,8 +2,8 @@ package ru.practicum.core.model.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.practicum.core.dto.CompilationDto;
-import ru.practicum.core.dto.NewCompilationDto;
+import ru.practicum.core.dto.compilation.response.CompilationDto;
+import ru.practicum.core.dto.compilation.NewCompilationDto;
 import ru.practicum.core.model.Compilation;
 
 @Mapper

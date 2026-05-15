@@ -5,7 +5,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import ru.practicum.core.dto.user.request.NewUserRequest;
 import ru.practicum.core.dto.user.response.UserDto;
-import ru.practicum.core.dto.user.projection.UserInfoProjection;
 import ru.practicum.core.dto.user.response.UserShortDto;
 import ru.practicum.core.model.User;
 

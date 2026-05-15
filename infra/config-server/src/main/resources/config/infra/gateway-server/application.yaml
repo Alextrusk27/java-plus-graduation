@@ -23,9 +23,16 @@ spring:
         - id: event_service_private_route
           uri: lb://event-service
           predicates:
-            - Path=/users/{userId}/events/**
+            - Path=/users/*/events/**
           metadata:
             description: "User-specific event operations"
+
+        - id: comment_service_public_route
+          uri: lb://comment-service
+          predicates:
+            - Path=/events/*/comments/**
+          metadata:
+            description: "Public comment endpoint"
 
         - id: event_service_public_route
           uri: lb://event-service
@@ -51,7 +58,7 @@ spring:
         - id: request_service_private_route
           uri: lb://request-service
           predicates:
-            - Path=/users/{userId}/requests/**
+            - Path=/users/*/requests/**
           metadata:
             description: "User-specific request operations"
 
@@ -61,6 +68,20 @@ spring:
             - Path=/internal/events/requests/**
           metadata:
             description: "Internal request management"
+
+        - id: comment_service_admin_route
+          uri: lb://comment-service
+          predicates:
+            - Path=/admin/comments/**
+          metadata:
+            description: "Admin operations for comments"
+
+        - id: comment_service_private_route
+          uri: lb://comment-service
+          predicates:
+            - Path=/users/*/comments/**
+          metadata:
+            description: "User-specific comment operations"
 
 server:
   port: ${GATEWAY_SERVER_PORT:8080}

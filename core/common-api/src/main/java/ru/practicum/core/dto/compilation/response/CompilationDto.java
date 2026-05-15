@@ -1,5 +1,4 @@
-package ru.practicum.core.dto;
-
+package ru.practicum.core.dto.compilation.response;
 
 import ru.practicum.core.dto.event.response.EventDtoShortWithoutViews;
 

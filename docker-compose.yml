@@ -57,8 +57,21 @@ services:
       - POSTGRES_USER=request
       - POSTGRES_PASSWORD=request
 
+  comment-service-db:
+    <<: *db-common
+    container_name: comment-service-db
+    volumes:
+      - comment_db_data:/var/lib/postgresql/data/
+    ports:
+      - "5437:5432"
+    environment:
+      - POSTGRES_DB=comment_service_db
+      - POSTGRES_USER=comment
+      - POSTGRES_PASSWORD=comment
+
 volumes:
   stats_db_data:
   user_db_data:
   event_db_data:
   request_db_data:
+  comment_db_data:
