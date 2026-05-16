@@ -1,9 +1,9 @@
 package ru.practicum.core.dto.event.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import ru.practicum.core.dto.category.response.CategoryDto;
 import ru.practicum.core.dto.TEMPORARY.Location;
 import ru.practicum.core.dto.TEMPORARY.State;
+import ru.practicum.core.dto.category.response.CategoryDto;
 import ru.practicum.core.dto.user.response.UserShortDto;
 
 import java.time.LocalDateTime;

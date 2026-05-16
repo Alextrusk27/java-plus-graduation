@@ -5,11 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.core.dto.compilation.response.CompilationDto;
 import ru.practicum.core.dto.compilation.NewCompilationDto;
 import ru.practicum.core.dto.compilation.UpdateCompilationRequest;
-import ru.practicum.core.utils.ApiPaths;
+import ru.practicum.core.dto.compilation.response.CompilationDto;
 import ru.practicum.core.service.CompilationService;
+import ru.practicum.core.utils.ApiPaths;
 
 @RestController
 @RequestMapping(ApiPaths.Admin.COMPILATIONS)

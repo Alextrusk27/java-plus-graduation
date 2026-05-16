@@ -14,8 +14,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping(ApiPaths.Private.REQUESTS)
-@Validated
 @RequiredArgsConstructor
+@Validated
 @Slf4j
 public class PrivateRequestController {
     private final RequestService service;

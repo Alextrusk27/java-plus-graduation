@@ -7,13 +7,13 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.core.dto.category.request.CreateCategoryDto;
 import ru.practicum.core.dto.category.response.CategoryDto;
 import ru.practicum.core.exception.ConflictException;
-import ru.practicum.core.utils.BaseService;
-import ru.practicum.core.utils.EntityName;
-import ru.practicum.core.utils.PageableFactory;
 import ru.practicum.core.model.Category;
 import ru.practicum.core.model.mapper.CategoryMapper;
 import ru.practicum.core.repository.CategoryRepository;
 import ru.practicum.core.repository.EventRepository;
+import ru.practicum.core.utils.BaseService;
+import ru.practicum.core.utils.EntityName;
+import ru.practicum.core.utils.PageableFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;

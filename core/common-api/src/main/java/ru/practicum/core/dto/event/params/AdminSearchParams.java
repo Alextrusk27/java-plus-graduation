@@ -4,7 +4,6 @@ import org.springframework.data.domain.Pageable;
 import ru.practicum.core.utils.PageableFactory;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static ru.practicum.core.utils.constants.AppConstants.DATE_TIME_FORMATTER;

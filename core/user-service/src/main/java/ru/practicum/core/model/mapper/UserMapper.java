@@ -1,4 +1,4 @@
-package ru.practicum.core.mapper;
+package ru.practicum.core.model.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -11,9 +11,9 @@ import java.util.Set;
 public interface UserService {
     List<UserDto> getUsers(UserSearchRequest request);
 
-    UserDto getUser(Long userId);
+    UserShortDto getUser(Long userId);
 
-    List<UserShortDto> getUserShort(Set<Long> userIds);
+    List<UserShortDto> getUser(Set<Long> userIds);
 
     UserDto createUser(NewUserRequest request);
 

@@ -6,11 +6,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.core.dto.event.params.PublicSearchParams;
 import ru.practicum.core.dto.event.response.EventDtoExtended;
 import ru.practicum.core.dto.event.response.EventDtoShort;
-import ru.practicum.core.dto.event.params.PublicSearchParams;
-import ru.practicum.core.utils.ApiPaths;
 import ru.practicum.core.service.EventService;
+import ru.practicum.core.utils.ApiPaths;
 
 import java.util.List;
 

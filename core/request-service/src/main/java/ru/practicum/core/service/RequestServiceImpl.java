@@ -10,15 +10,15 @@ import ru.practicum.core.dto.event.response.EventDtoInternal;
 import ru.practicum.core.dto.request.EventRequestStatusUpdateResult;
 import ru.practicum.core.dto.request.ParticipationRequestDto;
 import ru.practicum.core.dto.request.UpdateRequestStatusDto;
-import ru.practicum.core.dto.user.response.UserDto;
+import ru.practicum.core.dto.user.response.UserShortDto;
 import ru.practicum.core.exception.AccessException;
 import ru.practicum.core.exception.ConflictException;
-import ru.practicum.core.feign.client.EventFeignClient;
-import ru.practicum.core.feign.client.UserFeignClient;
 import ru.practicum.core.model.ParticipationRequest;
 import ru.practicum.core.model.RequestStatus;
 import ru.practicum.core.model.mapper.RequestMapper;
 import ru.practicum.core.repository.RequestRepository;
+import ru.practicum.core.resilience.EventClientService;
+import ru.practicum.core.resilience.UserClientService;
 import ru.practicum.core.utils.BaseService;
 import ru.practicum.core.utils.EntityName;
 
@@ -37,15 +37,15 @@ public class RequestServiceImpl extends BaseService implements RequestService {
     private final RequestRepository requestRepository;
     private final RequestMapper requestMapper;
 
-    private final UserFeignClient userFeignClient;
-    private final EventFeignClient eventFeignClient;
+    private final UserClientService userClientService;
+    private final EventClientService eventClientService;
 
     @Override
     @Transactional
     public ParticipationRequestDto create(Long userId, Long eventId) {
 
-        UserDto user = findUserOrThrow(userId);
-        EventDtoInternal event = findEventOrThrow(eventId);
+        UserShortDto user = userClientService.getUserRequired(userId);
+        EventDtoInternal event = eventClientService.getEventRequired(eventId);
 
         if (event.state() != State.PUBLISHED) {
             throw new ConflictException(
@@ -97,9 +97,7 @@ public class RequestServiceImpl extends BaseService implements RequestService {
 
     @Override
     public List<ParticipationRequestDto> get(Long userId) {
-        UserDto user = findUserOrThrow(userId);
-
-        return requestRepository.findAllByRequesterId(user.id()).stream()
+        return requestRepository.findAllByRequesterId(userId).stream()
                 .map(requestMapper::toDto)
                 .toList();
     }
@@ -107,8 +105,7 @@ public class RequestServiceImpl extends BaseService implements RequestService {
     @Override
     @Transactional
     public ParticipationRequestDto cancel(Long userId, Long requestId) {
-        UserDto user = findUserOrThrow(userId);
-
+        UserShortDto user = userClientService.getUserRequired(userId);
         ParticipationRequest request = findRequestOrThrow(requestId);
 
         if (!request.getRequesterId().equals(user.id())) {
@@ -193,13 +190,5 @@ public class RequestServiceImpl extends BaseService implements RequestService {
     private ParticipationRequest findRequestOrThrow(Long requestId) {
         return requestRepository.findById(requestId)
                 .orElseThrow(() -> throwNotFound(requestId, EntityName.REQUEST));
-    }
-
-    private UserDto findUserOrThrow(Long userId) {
-        return userFeignClient.getUserDto(userId);
-    }
-
-    private EventDtoInternal findEventOrThrow(Long eventId) {
-        return eventFeignClient.get(eventId);
     }
 }

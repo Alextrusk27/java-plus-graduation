@@ -3,7 +3,6 @@ package ru.practicum.core.service;
 import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.core.dto.TEMPORARY.RequestStatus;
@@ -18,13 +17,10 @@ import ru.practicum.core.dto.event.response.*;
 import ru.practicum.core.dto.request.EventRequestStatusUpdateResult;
 import ru.practicum.core.dto.request.ParticipationRequestDto;
 import ru.practicum.core.dto.request.UpdateRequestStatusDto;
-import ru.practicum.core.dto.user.response.UserDto;
 import ru.practicum.core.dto.user.response.UserShortDto;
 import ru.practicum.core.exception.AccessException;
 import ru.practicum.core.exception.ConflictException;
 import ru.practicum.core.exception.NotFoundException;
-import ru.practicum.core.feign.client.RequestFeignClient;
-import ru.practicum.core.feign.client.UserFeignClient;
 import ru.practicum.core.model.Category;
 import ru.practicum.core.model.Event;
 import ru.practicum.core.model.State;
@@ -32,6 +28,8 @@ import ru.practicum.core.model.mapper.EventMapper;
 import ru.practicum.core.repository.CategoryRepository;
 import ru.practicum.core.repository.EventPredicateBuilder;
 import ru.practicum.core.repository.EventRepository;
+import ru.practicum.core.resilience.RequestClientService;
+import ru.practicum.core.resilience.UserClientService;
 import ru.practicum.core.utils.BaseService;
 import ru.practicum.core.utils.EntityName;
 import ru.practicum.ewm.CreateHitDto;
@@ -56,15 +54,15 @@ public class EventServiceImpl extends BaseService implements EventService {
 
     private final EventMapper mapper;
 
-    private final UserFeignClient userFeignClient;
-    private final RequestFeignClient requestFeignClient;
+    private final UserClientService userClientService;
+    private final RequestClientService requestClientService;
 
     private final StatsClient statsClient;
 
     @Override
     @Transactional
     public EventDto create(CreateEventDto dto) {
-        UserDto initiator = findInitiatorOrThrow(dto.initiatorId());
+        UserShortDto initiator = userClientService.getUserRequired(dto.initiatorId());
         Category category = findCategoryOrThrow(dto.category());
 
         Event event = mapper.toEntity(dto);
@@ -79,7 +77,7 @@ public class EventServiceImpl extends BaseService implements EventService {
     @Override
     public EventDto update(UpdateEventDto dto) {
 
-        UserDto initiator = findInitiatorOrThrow(dto.initiatorId());
+        UserShortDto initiator = userClientService.getUserRequired(dto.initiatorId());
         Event event = findEventOrThrow(dto.eventId());
 
         if (!initiator.id().equals(dto.initiatorId())) {
@@ -105,7 +103,6 @@ public class EventServiceImpl extends BaseService implements EventService {
             applyStateAction(event, dto.stateAction());
         }
 
-        eventRepository.save(event);
         return mapper.toDto(event, initiator);
     }
 
@@ -113,6 +110,8 @@ public class EventServiceImpl extends BaseService implements EventService {
     @Transactional
     public EventDto adminUpdate(UpdateEventDto dto) {
         Event event = findEventOrThrow(dto.eventId());
+
+        UserShortDto initiator = userClientService.getUserRequired(event.getInitiatorId());
         mapper.updateEntity(dto, event);
 
         if (dto.hasStateAction()) {
@@ -137,7 +136,7 @@ public class EventServiceImpl extends BaseService implements EventService {
             event.setCategory(category);
         }
 
-        return mapper.toDto(event, findInitiatorOrThrow(event.getInitiatorId()));
+        return mapper.toDto(event, initiator);
     }
 
     @Override
@@ -154,10 +153,10 @@ public class EventServiceImpl extends BaseService implements EventService {
         Long views = getStat(List.of(event))
                 .getOrDefault(event.getId(), 0L);
 
-        Long confirmedRequests = requestFeignClient
-                .countRequestsByEventAndStatus(id, RequestStatus.CONFIRMED.toString());
+        Long confirmedRequests = requestClientService
+                .countByEvent(id, RequestStatus.CONFIRMED.toString());
 
-        UserShortDto initiator = userFeignClient.getUserShortDto(Set.of(event.getInitiatorId())).getFirst();
+        UserShortDto initiator = userClientService.getUserOptional(event.getInitiatorId());
 
         return mapper.toExtendedDto(event, views, confirmedRequests, initiator);
     }
@@ -165,7 +164,6 @@ public class EventServiceImpl extends BaseService implements EventService {
     @Override
     @Transactional(readOnly = true)
     public List<EventDtoShortWithoutViews> get(EventParamsSorted params) {
-        UserShortDto initiator = userFeignClient.getUserShortDto(Set.of(params.userId())).getFirst();
 
         List<Event> events = eventRepository.findByInitiatorId(
                         params.userId(),
@@ -180,8 +178,10 @@ public class EventServiceImpl extends BaseService implements EventService {
                 .map(Event::getId)
                 .toList();
 
-        Map<Long, Long> confirmedRequests = requestFeignClient
-                .countRequestsByEventsAndStatus(eventsIds, RequestStatus.CONFIRMED.toString());
+        Map<Long, Long> confirmedRequests = requestClientService
+                .countByEvents(eventsIds, RequestStatus.CONFIRMED.toString());
+
+        UserShortDto initiator = userClientService.getUserOptional(params.userId());
 
         return events.stream()
                 .map(event -> mapper.toDtoShort(
@@ -194,16 +194,15 @@ public class EventServiceImpl extends BaseService implements EventService {
     @Override
     @Transactional(readOnly = true)
     public EventDtoExtended get(EventParams params) {
-        findInitiatorOrThrow(params.userId());
-
         Event event = findEventOrThrow(params.eventId());
+        UserShortDto initiator = userClientService.getUserOptional(params.userId());
 
         return mapper.toExtendedDto(
                 event,
                 getStat(List.of(event)).getOrDefault(params.eventId(), 0L),
-                requestFeignClient
-                        .countRequestsByEventAndStatus(event.getId(), RequestStatus.CONFIRMED.toString()),
-                userFeignClient.getUserShortDto(Set.of(event.getInitiatorId())).getFirst());
+                requestClientService
+                        .countByEvent(event.getId(), RequestStatus.CONFIRMED.toString()),
+                initiator);
     }
 
     @Override
@@ -231,12 +230,12 @@ public class EventServiceImpl extends BaseService implements EventService {
                 .map(Event::getId)
                 .toList();
 
-        Map<Long, Long> confirmedRequests = requestFeignClient
-                .countRequestsByEventsAndStatus(eventsIds, RequestStatus.CONFIRMED.toString());
+        Map<Long, Long> confirmedRequests = requestClientService
+                .countByEvents(eventsIds, RequestStatus.CONFIRMED.toString());
 
         Map<Long, Long> views = getStat(events);
 
-        List<UserShortDto> initiatorsDto = userFeignClient.getUserShortDto(
+        List<UserShortDto> initiatorsDto = userClientService.getUsersOptional(
                 events.stream()
                         .map(Event::getInitiatorId)
                         .collect(Collectors.toSet())
@@ -280,10 +279,10 @@ public class EventServiceImpl extends BaseService implements EventService {
                 .map(Event::getId)
                 .toList();
 
-        Map<Long, Long> confirmedRequests = requestFeignClient
-                .countRequestsByEventsAndStatus(eventsIds, RequestStatus.CONFIRMED.toString());
+        Map<Long, Long> confirmedRequests = requestClientService
+                .countByEvents(eventsIds, RequestStatus.CONFIRMED.toString());
 
-        List<UserShortDto> initiatorsDto = userFeignClient.getUserShortDto(
+        List<UserShortDto> initiatorsDto = userClientService.getUsersOptional(
                 events.stream()
                         .map(Event::getInitiatorId)
                         .collect(Collectors.toSet()));
@@ -328,7 +327,7 @@ public class EventServiceImpl extends BaseService implements EventService {
                             .formatted(params.userId(), params.eventId()));
         }
 
-        return requestFeignClient.getByEventId(event.getId(), REQUESTS_DEFAULT_PAGEABLE);
+        return requestClientService.getByEvent(event.getId(), REQUESTS_DEFAULT_PAGEABLE);
     }
 
     @Override
@@ -358,16 +357,12 @@ public class EventServiceImpl extends BaseService implements EventService {
             );
         }
 
-        return requestFeignClient.updateStatuses(dto, event.getParticipantLimit());
+        return requestClientService.updateStatuses(dto, event.getParticipantLimit());
     }
 
     private Event findEventOrThrow(Long eventId) {
         return eventRepository.findById(eventId)
                 .orElseThrow(() -> throwNotFound(eventId, EntityName.EVENT));
-    }
-
-    private UserDto findInitiatorOrThrow(Long userId) {
-        return userFeignClient.getUserDto(userId);
     }
 
     private Category findCategoryOrThrow(Long categoryId) {
@@ -420,20 +415,6 @@ public class EventServiceImpl extends BaseService implements EventService {
         } catch (UnknownHostException e) {
             throw new RuntimeException("Error while creating hit.", e);
         }
-    }
-
-    private boolean hasValidResponse(ResponseEntity<List<ViewStatsDto>> response) {
-        if (response == null) {
-            return false;
-        }
-
-        if (!response.getStatusCode().is2xxSuccessful()) {
-            log.error("Response status code is {}", response.getStatusCode());
-            return false;
-        }
-
-        List<ViewStatsDto> body = response.getBody();
-        return body != null && !body.isEmpty();
     }
 
     private String createUri(Long eventId) {

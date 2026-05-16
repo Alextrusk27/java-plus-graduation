@@ -6,8 +6,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import ru.practicum.core.dto.event.response.EventDtoInternal;
 import ru.practicum.core.feign.FeignConfig;
 import ru.practicum.core.utils.ApiPaths;
+import ru.practicum.core.utils.constants.ServiceNames;
 
-@FeignClient(name = "event-service", path = ApiPaths.Internal.EVENTS, configuration = FeignConfig.class)
+@FeignClient(name = ServiceNames.EVENT_SERVICE, path = ApiPaths.Internal.EVENTS, configuration = FeignConfig.class)
 public interface EventFeignClient {
 
     @GetMapping("/{eventId}")

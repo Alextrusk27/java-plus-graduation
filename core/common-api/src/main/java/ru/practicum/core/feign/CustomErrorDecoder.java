@@ -4,13 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import feign.codec.ErrorDecoder;
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.ServiceUnavailableException;
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.core.exception.AccessException;
-import ru.practicum.core.exception.ConflictException;
-import ru.practicum.core.exception.ExceptionController;
-import ru.practicum.core.exception.NotFoundException;
+import ru.practicum.core.exception.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +52,7 @@ public class CustomErrorDecoder implements ErrorDecoder {
         }
 
         if (status >= 500 && status < 600) {
-            log.warn("[{}] Server Error {}: {}", clientName, status, message);
+            log.error("[{}] Server Error {}: {}", clientName, status, message);
             throw new ServiceUnavailableException(message);
         }
 

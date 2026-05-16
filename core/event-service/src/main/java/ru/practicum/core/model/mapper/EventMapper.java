@@ -1,10 +1,9 @@
 package ru.practicum.core.model.mapper;
 
 import org.mapstruct.*;
-import ru.practicum.core.dto.event.response.*;
 import ru.practicum.core.dto.event.request.CreateEventDto;
 import ru.practicum.core.dto.event.request.UpdateEventDto;
-import ru.practicum.core.dto.user.response.UserDto;
+import ru.practicum.core.dto.event.response.*;
 import ru.practicum.core.dto.user.response.UserShortDto;
 import ru.practicum.core.model.Event;
 
@@ -29,7 +28,7 @@ public interface EventMapper {
 
     @Mapping(target = "id", source = "event.id")
     @Mapping(target = "initiator", source = "initiator")
-    EventDto toDto(Event event, UserDto initiator);
+    EventDto toDto(Event event, UserShortDto initiator);
 
     @Mapping(target = "id", source = "event.id")
     @Mapping(target = "views", source = "views")

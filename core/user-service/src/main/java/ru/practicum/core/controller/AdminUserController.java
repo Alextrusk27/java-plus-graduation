@@ -7,10 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.core.dto.user.request.NewUserRequest;
-import ru.practicum.core.dto.user.response.UserDto;
 import ru.practicum.core.dto.user.request.UserSearchRequest;
-import ru.practicum.core.utils.ApiPaths;
+import ru.practicum.core.dto.user.response.UserDto;
 import ru.practicum.core.service.UserService;
+import ru.practicum.core.utils.ApiPaths;
 
 import java.util.List;
 

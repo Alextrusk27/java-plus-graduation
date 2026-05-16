@@ -12,12 +12,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import ru.practicum.core.dto.user.request.NewUserRequest;
-import ru.practicum.core.dto.user.response.UserDto;
 import ru.practicum.core.dto.user.request.UserSearchRequest;
+import ru.practicum.core.dto.user.response.UserDto;
 import ru.practicum.core.exception.ConflictException;
 import ru.practicum.core.exception.NotFoundException;
-import ru.practicum.core.mapper.UserMapper;
 import ru.practicum.core.model.User;
+import ru.practicum.core.model.mapper.UserMapper;
 import ru.practicum.core.repository.UserRepository;
 import ru.practicum.core.service.UserServiceImpl;
 

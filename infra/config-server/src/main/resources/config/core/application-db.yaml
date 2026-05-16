@@ -1,0 +1,9 @@
+spring:
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate

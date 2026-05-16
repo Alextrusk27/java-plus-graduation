@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.core.dto.category.response.CategoryDto;
-import ru.practicum.core.utils.ApiPaths;
 import ru.practicum.core.service.CategoryService;
+import ru.practicum.core.utils.ApiPaths;
 
 import java.util.List;
 

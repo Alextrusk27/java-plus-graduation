@@ -6,24 +6,24 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.core.dto.compilation.response.CompilationDto;
-import ru.practicum.core.dto.compilation.NewCompilationDto;
 import ru.practicum.core.dto.TEMPORARY.RequestStatus;
+import ru.practicum.core.dto.compilation.NewCompilationDto;
 import ru.practicum.core.dto.compilation.UpdateCompilationRequest;
+import ru.practicum.core.dto.compilation.response.CompilationDto;
 import ru.practicum.core.dto.event.response.EventDtoShortWithoutViews;
 import ru.practicum.core.dto.user.response.UserShortDto;
 import ru.practicum.core.exception.NotFoundException;
 import ru.practicum.core.feign.client.RequestFeignClient;
 import ru.practicum.core.feign.client.UserFeignClient;
-import ru.practicum.core.utils.BaseService;
-import ru.practicum.core.utils.EntityName;
-import ru.practicum.core.utils.PageableFactory;
 import ru.practicum.core.model.Compilation;
 import ru.practicum.core.model.Event;
 import ru.practicum.core.model.mapper.CompilationMapper;
 import ru.practicum.core.model.mapper.EventMapper;
 import ru.practicum.core.repository.CompilationRepository;
 import ru.practicum.core.repository.EventRepository;
+import ru.practicum.core.utils.BaseService;
+import ru.practicum.core.utils.EntityName;
+import ru.practicum.core.utils.PageableFactory;
 
 import java.util.*;
 import java.util.function.Function;
@@ -69,11 +69,11 @@ public class CompilationServiceImpl extends BaseService implements CompilationSe
             Map<Long, UserShortDto> initiators = getEventsInitiators(compilation.getEvents());
 
             eventsWithRequests = compilation.getEvents().stream()
-                .map(event -> eventMapper.toDtoShort(
-                        event, confirmedRequests
-                                .getOrDefault(event.getId(), 0L),
-                        initiators.get(event.getInitiatorId())))
-                .toList();
+                    .map(event -> eventMapper.toDtoShort(
+                            event, confirmedRequests
+                                    .getOrDefault(event.getId(), 0L),
+                            initiators.get(event.getInitiatorId())))
+                    .toList();
         }
 
         return new CompilationDto(compilation.getId(),

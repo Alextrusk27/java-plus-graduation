@@ -2,8 +2,6 @@ package ru.practicum.core.exception;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.ServiceUnavailableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -112,7 +110,7 @@ public class ExceptionController {
     public ResponseEntity<ApiError> handleServiceUnavailableException(final ServiceUnavailableException e) {
         log.warn("Service unavailable exception: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body(ApiError.of(HttpStatus.SERVICE_UNAVAILABLE, "Service is temporarily unavailable.",
+                .body(ApiError.of(HttpStatus.SERVICE_UNAVAILABLE, "Service is unavailable.",
                         Collections.singletonList(e.getMessage())));
     }
 }
