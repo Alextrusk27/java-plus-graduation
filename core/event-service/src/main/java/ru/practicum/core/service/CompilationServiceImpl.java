@@ -106,32 +106,38 @@ public class CompilationServiceImpl extends BaseService implements CompilationSe
                 .findAllByPinned(pinned, pageable)
                 .getContent();
 
+        if (compilations.isEmpty()) {
+            return List.of();
+        }
+
         List<Long> eventsIds = compilations.stream()
                 .flatMap(compilation -> compilation.getEvents().stream())
                 .map(Event::getId)
                 .distinct()
                 .toList();
 
-        Map<Long, Long> confirmedRequests = requestFeignClient
-                .countRequestsByEventsAndStatus(eventsIds, RequestStatus.CONFIRMED.toString());
+        Map<Long, Long> confirmedRequests = eventsIds.isEmpty()
+                ? Collections.emptyMap()
+                : requestFeignClient.countRequestsByEventsAndStatus(eventsIds, RequestStatus.CONFIRMED.toString());
 
-        Map<Long, UserShortDto> initiators = getEventsInitiators(
-                compilations.stream()
-                        .flatMap(c -> c.getEvents().stream())
-                        .collect(Collectors.toSet()));
+        Map<Long, UserShortDto> initiators = eventsIds.isEmpty()
+                ? Collections.emptyMap()
+                : getEventsInitiators(compilations.stream()
+                .filter(compilation -> compilation.getEvents() != null && !compilation.getEvents().isEmpty())
+                .flatMap(c -> c.getEvents().stream())
+                .collect(Collectors.toSet()));
 
         return compilations.stream()
                 .map(compilation -> new CompilationDto(
                         compilation.getId(),
                         compilation.getPinned(),
                         compilation.getTitle(),
-                        compilation.getEvents().stream()
-                                .map(event -> eventMapper
-                                        .toDtoShort(
-                                                event,
-                                                confirmedRequests.getOrDefault(event.getId(), 0L),
-                                                initiators.get(event.getInitiatorId())))
-                                .toList()))
+                        compilation.getEvents() != null ? compilation.getEvents().stream()
+                                .map(event -> eventMapper.toDtoShort(
+                                        event,
+                                        confirmedRequests.getOrDefault(event.getId(), 0L),
+                                        initiators.get(event.getInitiatorId())))
+                                .toList() : List.of()))
                 .toList();
     }
 
@@ -205,6 +211,9 @@ public class CompilationServiceImpl extends BaseService implements CompilationSe
     }
 
     private Map<Long, UserShortDto> getEventsInitiators(Set<Event> events) {
+        if (events == null || events.isEmpty()) {
+            return Collections.emptyMap();
+        }
 
         return userFeignClient.getUserShortDto(
                         events.stream()
