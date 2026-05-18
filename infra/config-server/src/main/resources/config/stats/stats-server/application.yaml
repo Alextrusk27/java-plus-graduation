@@ -1,16 +1,14 @@
 spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/stats_db
-    username: ${DB_USER:stats}
-    password: ${DB_PASSWORD:stats}
-
   sql:
     init:
       mode: always
 
   jpa:
     open-in-view: false
-    properties:
-      hibernate:
-        ddl-auto: validate
+    hibernate:
+      ddl-auto: validate
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/stats_db
+    username: ${DB_USER:user}
+    password: ${DB_PASSWORD:password}

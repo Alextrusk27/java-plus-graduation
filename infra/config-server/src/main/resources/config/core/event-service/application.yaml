@@ -8,10 +8,7 @@ spring:
       - http
 
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${DB_HOSTNAME:localhost}:${DB_PORT:5435}/${DB_NAME:event_service_db}
-    username: ${DB_USER:event}
-    password: ${DB_PASSWORD:event}
+    url: jdbc:postgresql://localhost:5432/events_db
 
 ewm:
   stats-server:

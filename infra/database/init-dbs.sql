@@ -1,0 +1,5 @@
+CREATE DATABASE events_db;
+CREATE DATABASE requests_db;
+CREATE DATABASE users_db;
+CREATE DATABASE comments_db;
+CREATE DATABASE stats_db;

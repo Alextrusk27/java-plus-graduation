@@ -8,10 +8,7 @@ spring:
       - http
 
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${DB_HOSTNAME:localhost}:${DB_PORT:5436}/${DB_NAME:request_service_db}
-    username: ${DB_USER:request}
-    password: ${DB_PASSWORD:request}
+    url: jdbc:postgresql://localhost:5432/requests_db
 
 resilience4j:
   circuitbreaker:

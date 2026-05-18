@@ -7,3 +7,7 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: validate
+
+  datasource:
+    username: ${DB_USER:user}
+    password: ${DB_PASSWORD:password}
