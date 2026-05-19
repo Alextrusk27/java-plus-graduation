@@ -1,23 +1,138 @@
+name: explore-with-me
+
+x-common-healthcheck: &healthcheck-default
+  timeout: 5s
+  interval: 10s
+  retries: 10
+  start_period: 30s
+
+x-spring-profile: &spring-profile
+  SPRING_PROFILES_ACTIVE: docker
+
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  environment:
+    <<: *spring-profile
+  depends_on:
+    config:
+      condition: service_healthy
+
 services:
   postgres:
     image: postgres:16.1-alpine
     restart: unless-stopped
-    container_name: ewm-postgres-db
+    container_name: postgres
     volumes:
-      - ./infra/database/init-dbs.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./docker/postgres/init-dbs.sql:/docker-entrypoint-initdb.d/init.sql
       - postgres_data:/var/lib/postgresql/data/
-    ports:
-      - "5432:5432"
     environment:
       - POSTGRES_DB=ewm_postgres_db
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
     healthcheck:
+      <<: *healthcheck-default
       test: [ "CMD-SHELL", "pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER" ]
-      timeout: 5s
-      interval: 5s
-      retries: 10
-      start_period: 10s
+
+  discovery:
+    build:
+      context: .
+      dockerfile: infra/discovery-server/Dockerfile
+    image: discovery-server:latest
+    container_name: discovery-server
+    restart: unless-stopped
+    ports:
+      - "8761:8761" #opened port needs here for git tests
+    environment:
+      <<: *spring-profile
+    healthcheck:
+      test: ["CMD", "busybox", "wget", "--spider", "http://localhost:8761/actuator/health"]
+      <<: *healthcheck-default
+
+  config:
+    build:
+      context: .
+      dockerfile: infra/config-server/Dockerfile
+    image: config-server:latest
+    container_name: config-server
+    restart: unless-stopped
+    environment:
+      <<: *spring-profile
+    healthcheck:
+      test: ["CMD", "busybox", "wget", "--spider", "http://localhost:8888/actuator/health"]
+      <<: *healthcheck-default
+    depends_on:
+      discovery:
+        condition: service_healthy
+
+  gateway:
+    build:
+      context: .
+      dockerfile: infra/gateway-server/Dockerfile
+    image: gateway-server:latest
+    container_name: gateway-server
+    <<: *service-defaults
+    ports:
+      - "8080:8080"
+    volumes:
+      - gateway_server_data:/var/lib/postgresql/data/
+
+  stats:
+    build:
+      context: .
+      dockerfile: stats/stats-server/Dockerfile
+    image: stats-server:latest
+    container_name: stats-server
+    <<: *service-defaults
+    ports:
+      - "9090:9090" #opened port needs here for git tests
+    volumes:
+      - stats_service_data:/var/lib/postgresql/data/
+
+  users:
+    build:
+      context: .
+      dockerfile: core/user-service/Dockerfile
+    image: user-service:latest
+    container_name: user-service
+    <<: *service-defaults
+    volumes:
+      - user_service_data:/var/lib/postgresql/data/
+
+  request:
+    build:
+      context: .
+      dockerfile: core/request-service/Dockerfile
+    image: request-service:latest
+    container_name: request-service
+    <<: *service-defaults
+    volumes:
+      - request_service_data:/var/lib/postgresql/data/
+
+  event:
+    build:
+      context: .
+      dockerfile: core/event-service/Dockerfile
+    image: event-service:latest
+    container_name: event-service
+    <<: *service-defaults
+    volumes:
+      - event_service_data:/var/lib/postgresql/data/
+
+  comment:
+    build:
+      context: .
+      dockerfile: core/comment-service/Dockerfile
+    image: comment-service:latest
+    container_name: comment-service
+    <<: *service-defaults
+    volumes:
+      - comment_service_data:/var/lib/postgresql/data/
 
 volumes:
   postgres_data:
+  gateway_server_data:
+  stats_service_data:
+  user_service_data:
+  request_service_data:
+  event_service_data:
+  comment_service_data:

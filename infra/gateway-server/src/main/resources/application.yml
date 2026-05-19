@@ -1,11 +1,10 @@
 spring:
   application:
-    name: request-service
+    name: gateway-server
   config:
     import: "configserver:"
   cloud:
     config:
-      fail-fast: true
       retry:
         useRandomPolicy: true
         max-interval: 6000
@@ -20,4 +19,13 @@ eureka:
   instance:
     hostname: localhost
     prefer-ip-address: true
-    instance-id: ${spring.application.name}:${random.uuid}
+    instance-id: gateway-server
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+  endpoint:
+    gateway:
+      enabled: true

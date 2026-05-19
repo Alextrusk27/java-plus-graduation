@@ -1,13 +1,8 @@
 spring:
   application:
     name: user-service
-
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:}
-
   config:
     import: "configserver:"
-
   cloud:
     config:
       fail-fast: true
@@ -21,11 +16,8 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://${eureka.instance.hostname:localhost}:${eureka.instance.port:8761}/eureka/
-
+      defaultZone: http://discovery-server:8761/eureka/
   instance:
+    hostname: localhost
     prefer-ip-address: true
-    hostname: ${HOSTNAME:localhost}
     instance-id: ${spring.application.name}:${random.uuid}
-    lease-renewal-interval-in-seconds: 7
-    lease-expiration-duration-in-seconds: 30
