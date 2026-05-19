@@ -22,7 +22,7 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://discovery-server:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
     initial-instance-info-replication-interval-seconds: 10
     instance-info-replication-interval-seconds: 30
   instance:
