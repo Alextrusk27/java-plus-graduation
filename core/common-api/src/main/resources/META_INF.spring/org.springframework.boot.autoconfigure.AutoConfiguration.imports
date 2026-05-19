@@ -1,0 +1,4 @@
+ru.practicum.core.exception.ExceptionController
+ru.practicum.core.resilience.UserClientService
+ru.practicum.core.resilience.EventClientService
+ru.practicum.core.resilience.RequestClientService

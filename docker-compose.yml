@@ -1,42 +1,25 @@
-services:
-#  stats-server:
-#    ports:
-#      - "9090:9090"
+name: explore-with-me
 
-  stats-db:
-    image: postgres:16.1
-    container_name: stats-db
-    volumes:
-      - ./stats/stats-server/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+services:
+  postgres:
+    image: postgres:16.1-alpine
+    restart: unless-stopped
+    container_name: postgres
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_DB=stats_db
-      - POSTGRES_USER=stats
-      - POSTGRES_PASSWORD=stats
-    healthcheck:
-      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
-      timeout: 5s
-      interval: 5s
-      retries: 10
-
-#  ewm-service:
-#    ports:
-#      - "8080:8080"
-
-  main-db:
-    image: postgres:16.1
-    container_name: main-db
     volumes:
-      - ./core/main-service/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
-    ports:
-      - "5433:5432"
+      - ./docker/postgres/init-dbs.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=main_db
-      - POSTGRES_USER=main
-      - POSTGRES_PASSWORD=main
+      - POSTGRES_DB=ewm_postgres_db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
     healthcheck:
-      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
       timeout: 5s
-      interval: 5s
+      interval: 10s
       retries: 10
+      start_period: 30s
+      test: [ "CMD-SHELL", "pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER" ]
+
+volumes:
+  postgres_data:

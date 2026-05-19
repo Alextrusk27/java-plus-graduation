@@ -1,0 +1,40 @@
+server:
+  port: 0
+
+spring:
+  profiles:
+    include:
+      - db
+      - http
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/events_db
+
+ewm:
+  stats-server:
+    url: http://stats-server
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      request-service:
+        base-config: default
+      user-service:
+        base-config: default
+
+  retry:
+    instances:
+      request-service:
+        base-config: default
+      user-service:
+        base-config: default
+
+logging:
+  level:
+    org.springframework.cloud.loadbalancer: ERROR
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, beans

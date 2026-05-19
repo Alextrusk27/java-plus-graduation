@@ -3,18 +3,85 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true
+          enabled: false
 
       routes:
-        - id: main_service_route
-          uri: lb://main-service
+        - id: user_service_admin_route
+          uri: lb://user-service
           predicates:
-            - Path=/admin/**,/compilations/**,/events/**,/categories/**,/users/**
+            - Path=/admin/users/**
+          metadata:
+            description: "Admin operations for users"
 
-        - id: stats_server_route
-          uri: lb://stats-server
+        - id: user_service_internal_route
+          uri: lb://user-service
           predicates:
-            - Path=/stats/**
+            - Path=/internal/users/**
+          metadata:
+            description: "Internal cross-service communication for users"
+
+        - id: event_service_private_route
+          uri: lb://event-service
+          predicates:
+            - Path=/users/*/events/**
+          metadata:
+            description: "User-specific event operations"
+
+        - id: comment_service_public_route
+          uri: lb://comment-service
+          predicates:
+            - Path=/events/*/comments/**
+          metadata:
+            description: "Public comment endpoint"
+
+        - id: event_service_public_route
+          uri: lb://event-service
+          predicates:
+            - Path=/categories/**, /events/**, /compilations/**
+          metadata:
+            description: "Public event endpoints"
+
+        - id: event_service_admin_route
+          uri: lb://event-service
+          predicates:
+            - Path=/admin/categories/**, /admin/events/**, /admin/compilations/**
+          metadata:
+            description: "Admin operations for events, categories, compilations"
+
+        - id: event_service_internal_route
+          uri: lb://event-service
+          predicates:
+            - Path=/internal/events/**
+          metadata:
+            description: "Internal cross-service communication for events"
+
+        - id: request_service_private_route
+          uri: lb://request-service
+          predicates:
+            - Path=/users/*/requests/**
+          metadata:
+            description: "User-specific request operations"
+
+        - id: request_service_internal_route
+          uri: lb://request-service
+          predicates:
+            - Path=/internal/events/requests/**
+          metadata:
+            description: "Internal request management"
+
+        - id: comment_service_admin_route
+          uri: lb://comment-service
+          predicates:
+            - Path=/admin/comments/**
+          metadata:
+            description: "Admin operations for comments"
+
+        - id: comment_service_private_route
+          uri: lb://comment-service
+          predicates:
+            - Path=/users/*/comments/**
+          metadata:
+            description: "User-specific comment operations"
 
 server:
-  port: ${GATEWAY_SERVER_PORT:8080}
+  port: 8080
